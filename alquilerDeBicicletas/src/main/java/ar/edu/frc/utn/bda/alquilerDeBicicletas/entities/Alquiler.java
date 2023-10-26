@@ -40,17 +40,17 @@ public class Alquiler {
     @Column(name = "MONTO")
     private Double monto;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ESTACION_RETIRO", referencedColumnName = "ID")
     @Column(name = "ESTACION_RETIRO")
     private Estacion estacionRetiro;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ESTACION_DEVOLUCION", referencedColumnName = "ID")
     @Column(name = "ESTACION_DEVOLUCION")
     private Estacion estacionDevolucion;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_TARIFA", referencedColumnName = "ID")
     @Column(name = "ID_TARIFA")
     private Tarifa tarifa;
