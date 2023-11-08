@@ -25,4 +25,18 @@ public class EstacionController {
         List<Estacion> values = this.estacionService.findAll();
         return ResponseEntity.ok(values);
     }
+    @PostMapping
+    public ResponseEntity<Estacion> add(EstacionCreateRequest aRequest){
+        try {
+            Estacion estacion = aRequest.toEstacion();
+            estacion.setFechaHoraCreacion(LocalDateTime.now());
+            Estacion value = this.estacionService.add(estacion);
+            return ResponseEntity.ok(value);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+
+    }
 }
