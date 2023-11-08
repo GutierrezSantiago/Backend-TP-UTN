@@ -42,16 +42,13 @@ public class Alquiler {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ESTACION_RETIRO", referencedColumnName = "ID")
-    @Column(name = "ESTACION_RETIRO")
     private Estacion estacionRetiro;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ESTACION_DEVOLUCION", referencedColumnName = "ID")
-    @Column(name = "ESTACION_DEVOLUCION")
     private Estacion estacionDevolucion;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_TARIFA", referencedColumnName = "ID")
-    @Column(name = "ID_TARIFA")
     private Tarifa tarifa;
 }
