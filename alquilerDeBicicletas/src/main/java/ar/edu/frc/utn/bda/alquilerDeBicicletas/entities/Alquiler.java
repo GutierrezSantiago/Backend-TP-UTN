@@ -40,13 +40,11 @@ public class Alquiler {
     @Column(name = "MONTO")
     private Double monto;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "ESTACION_RETIRO", referencedColumnName = "ID")
-    private Estacion estacionRetiro;
+    @Column(name = "ESTACION_RETIRO")
+    private Integer estacionRetiroId;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "ESTACION_DEVOLUCION", referencedColumnName = "ID")
-    private Estacion estacionDevolucion;
+    @Column(name = "ESTACION_DEVOLUCION")
+    private Integer estacionDevolucionId;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_TARIFA", referencedColumnName = "ID")

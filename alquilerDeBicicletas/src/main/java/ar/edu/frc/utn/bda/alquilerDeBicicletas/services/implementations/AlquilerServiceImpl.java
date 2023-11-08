@@ -1,11 +1,11 @@
 package ar.edu.frc.utn.bda.alquilerDeBicicletas.services.implementations;
 
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.Alquiler;
-import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.Estacion;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.repositories.AlquilerRepository;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.interfaces.AlquilerService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,4 +36,11 @@ public class AlquilerServiceImpl implements AlquilerService {
 
     @Override
     public List<Alquiler> findAll() { return this.alquilerRepository.findAll(); }
+
+    @Override
+    public List<Alquiler> findAllEnPerido(LocalDateTime desde, LocalDateTime hasta) {
+        List<Alquiler> alquileres = this.alquilerRepository.findAllEnPerido(desde, hasta);
+        if(alquileres.isEmpty()) throw new IllegalArgumentException("No se encontraron alquileres en el periodo");
+        return alquileres;
+    }
 }
