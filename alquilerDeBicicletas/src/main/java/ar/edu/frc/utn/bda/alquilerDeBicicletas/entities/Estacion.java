@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -28,7 +29,7 @@ public class Estacion {
 
     @Column(name="FECHA_HORA_CREACION")
     @Convert(converter = LocalDateTimeConverter.class)
-    private Date fechaHoraCreacion;
+    private LocalDate fechaHoraCreacion;
 
     @Column(name="LATITUD")
     private double latitud;
