@@ -2,9 +2,11 @@ package ar.edu.frc.utn.bda.Estaciones.entities.requests;
 
 import ar.edu.frc.utn.bda.Estaciones.entities.Estacion;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class EstacionCreateRequest {
     @NotBlank(message = "Nombre es obligatorio")
     private String nombre;

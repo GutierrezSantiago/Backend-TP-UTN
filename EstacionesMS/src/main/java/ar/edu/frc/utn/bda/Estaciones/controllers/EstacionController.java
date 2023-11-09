@@ -4,6 +4,7 @@ package ar.edu.frc.utn.bda.Estaciones.controllers;
 import ar.edu.frc.utn.bda.Estaciones.entities.Estacion;
 import ar.edu.frc.utn.bda.Estaciones.entities.requests.EstacionCreateRequest;
 import ar.edu.frc.utn.bda.Estaciones.services.interfaces.EstacionService;
+import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +23,15 @@ public class EstacionController {
     }
     @GetMapping
     public ResponseEntity<List<Estacion>> getAll(){
-        List<Estacion> values = this.estacionService.findAll();
-        return ResponseEntity.ok(values);
+        try {
+            List<Estacion> values = this.estacionService.findAll();
+            return ResponseEntity.ok(values);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+
     }
     @PostMapping
     public ResponseEntity<Estacion> add(EstacionCreateRequest aRequest){

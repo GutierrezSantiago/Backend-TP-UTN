@@ -15,10 +15,15 @@ public class EstacionServiceImpl implements EstacionService {
     }
 
     @Override
-    public Estacion add(Estacion entity) { return this.estacionRepository.save(entity); }
+    public Estacion add(Estacion entity) {
+        return this.estacionRepository.save(entity);
+    }
 
     @Override
-    public Estacion update(Estacion entity) { return this.estacionRepository.save(entity); }
+    public Estacion update(Estacion entity) {
+        if (!this.estacionRepository.existsById(entity.getId())) throw new IllegalArgumentException("No existe la estación a agregar.");
+        return this.estacionRepository.save(entity);
+    }
 
     @Override
     public Estacion delete(Integer id) {
@@ -33,7 +38,11 @@ public class EstacionServiceImpl implements EstacionService {
     }
 
     @Override
-    public List<Estacion> findAll() { return this.estacionRepository.findAll(); }
+    public List<Estacion> findAll() {
+        List<Estacion> estaciones = this.estacionRepository.findAll();
+        if(estaciones.isEmpty()){throw new IllegalArgumentException("No categories found");}
+        return estaciones;
+    }
 
     @Override
     public Estacion findByClosestTo(double latitud, double longitud) {
