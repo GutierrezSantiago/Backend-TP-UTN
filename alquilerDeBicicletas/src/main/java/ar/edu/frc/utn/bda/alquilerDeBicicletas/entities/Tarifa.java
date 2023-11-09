@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "TARIFAS")
 @Data
@@ -51,7 +53,18 @@ public class Tarifa {
     private Double montoHora;
 
 
-
+    public double calcularMonto(LocalDateTime fechaHoraRetiro, LocalDateTime fechaHoraDevolucion, double distanciaRecorrida){
+       double monto = this.montoFijoAlquiler;
+        double diferenciaTiempoMinutos = fechaHoraRetiro.until(fechaHoraDevolucion, java.time.temporal.ChronoUnit.MINUTES);
+       if(diferenciaTiempoMinutos < 31){
+           monto += diferenciaTiempoMinutos * this.montoMinutoFraccion;
+       }
+       else {
+           long diferenciaTiempoHoras = Math.round(diferenciaTiempoMinutos / 60);
+           monto += diferenciaTiempoHoras * this.montoHora;
+       }
+       return monto + distanciaRecorrida * this.montoKm;
+    }
 
 
 

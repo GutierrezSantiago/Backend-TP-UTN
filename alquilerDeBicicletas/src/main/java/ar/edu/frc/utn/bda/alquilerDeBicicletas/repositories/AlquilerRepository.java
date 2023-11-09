@@ -13,4 +13,8 @@ public interface AlquilerRepository extends JpaRepository<Alquiler, Integer> {
     @Query("SELECT a FROM Alquiler a WHERE a.fechaHoraRetiro >= ?1 AND a.fechaHoraRetiro <= ?2 " +
             "AND a.fechaHoraDevolucion >= ?1 AND a.fechaHoraDevolucion <= ?2")
     List<Alquiler> findAllEnPerido(LocalDateTime desde, LocalDateTime hasta);
+
+    @Query("SELECT a FROM Alquiler a WHERE a.idCliente = ?1 AND a.estado = 1")
+    Alquiler findActivoByIdCliente(String idCliente);
+
 }

@@ -1,6 +1,7 @@
 package ar.edu.frc.utn.bda.alquilerDeBicicletas.entities;
 
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.support.LocalDateTimeConverter;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,4 +50,25 @@ public class Alquiler {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_TARIFA", referencedColumnName = "ID")
     private Tarifa tarifa;
+
+    public Alquiler(
+            String idCliente,
+            Integer estacionRetiroId
+    ){
+        this.id = null;
+        this.idCliente = idCliente;
+        this.estado = 1;
+        this.fechaHoraRetiro = LocalDateTime.now();
+        this.fechaHoraDevolucion = null;
+        this.monto = null;
+        this.estacionRetiroId = estacionRetiroId;
+    }
+
+    public void finalizar(Integer estacionDevolucionId, double distanciaRecorrida){
+        this.estado = 2;
+        this.fechaHoraDevolucion = LocalDateTime.now();
+        this.estacionDevolucionId = estacionDevolucionId;
+        this.monto = this.tarifa.calcularMonto(this.fechaHoraRetiro, this.fechaHoraDevolucion, distanciaRecorrida);
+    }
+
 }
