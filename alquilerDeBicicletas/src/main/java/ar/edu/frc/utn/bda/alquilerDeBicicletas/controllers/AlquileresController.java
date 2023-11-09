@@ -27,7 +27,7 @@ public class AlquileresController {
             List<Alquiler> values = this.alquilerService.findAllEnPerido(desdeT, hastaT);
             return ResponseEntity.ok(values);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
@@ -63,8 +63,6 @@ public class AlquileresController {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
-
     }
-
 
 }
