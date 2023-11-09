@@ -23,8 +23,15 @@ public class EstacionController {
     }
     @GetMapping
     public ResponseEntity<List<Estacion>> getAll(){
-        List<Estacion> values = this.estacionService.findAll();
-        return ResponseEntity.ok(values);
+        try {
+            List<Estacion> values = this.estacionService.findAll();
+            return ResponseEntity.ok(values);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+
     }
     @PostMapping
     public ResponseEntity<Estacion> add(EstacionCreateRequest aRequest){
