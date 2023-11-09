@@ -36,4 +36,8 @@ public class Estacion {
     @Column(name="LONGITUD")
     private double longitud;
 
+    public double calcularDistancia(double latitud, double longitud){
+        return Math.sqrt(Math.pow(this.latitud - latitud, 2) + Math.pow(this.longitud - longitud, 2));
+    }
+
 }
