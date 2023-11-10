@@ -36,8 +36,11 @@ public class Estacion {
     @Column(name="LONGITUD")
     private double longitud;
 
-    public double calcularDistancia(double latitud, double longitud){
-        return Math.sqrt(Math.pow(this.latitud - latitud, 2) + Math.pow(this.longitud - longitud, 2));
+    //  calcular la distancia entre dos estaciones, se considerará simplemente la
+    //distancia euclídea entre ambos puntos y cada grado corresponderá a 110000 m.
+    public double calcularDistancia(Estacion otraEstacion){
+        double distancia = Math.sqrt(Math.pow(this.latitud-otraEstacion.getLatitud(),2)+Math.pow(this.longitud-otraEstacion.getLongitud(),2));
+        return distancia*110000;
     }
 
 }

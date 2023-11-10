@@ -57,7 +57,7 @@ public class EstacionServiceImpl implements EstacionService {
     public double calcularDistancia(Integer idEstacionRetiro, Integer idEstacionDevolucion) {
         Estacion estacionDevolucion = this.estacionRepository.findById(idEstacionDevolucion).orElseThrow(() -> new IllegalArgumentException("No se encontro la estacionRetiro"));
         Estacion estacionRetiro = this.estacionRepository.findById(idEstacionRetiro).orElseThrow(() -> new IllegalArgumentException("No se encontro la estacionDevolucion"));
-        double distancia = estacionDevolucion.calcularDistancia(estacionRetiro.getLatitud(), estacionRetiro.getLongitud());
+        double distancia = estacionDevolucion.calcularDistancia(estacionRetiro);
         return distancia;
     }
 

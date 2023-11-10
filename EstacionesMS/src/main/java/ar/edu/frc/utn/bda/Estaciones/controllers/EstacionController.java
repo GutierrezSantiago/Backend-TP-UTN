@@ -46,7 +46,7 @@ public class EstacionController {
 
     }
     @GetMapping("/{latitud}?{longitud}")
-    public ResponseEntity<Estacion> getEstacionByLatitudAndLongitud(Double latitud, Double longitud){
+    public ResponseEntity<Estacion> getEstacionByLatitudAndLongitud(@PathVariable("latitud")Double latitud, @PathVariable("longitud")Double longitud){
         try {
             Estacion value = this.estacionService.findByClosestTo(latitud, longitud);
             return ResponseEntity.ok(value);
@@ -71,14 +71,16 @@ public class EstacionController {
         }
     }
 
-    @GetMapping("/{idEstacionRetiro}&{idEstacionDevolucion}")
-    public ResponseEntity<Double> calcularDistanciaEntreEstaciones(Integer idEstacionRetiro, Integer idEstacionDevolucion){
+    @GetMapping("/distancia/{idEstacionRetiro}&{idEstacionDevolucion}")
+    public ResponseEntity<Double> calcularDistanciaEntreEstaciones(@PathVariable("idEstacionRetiro")Integer idEstacionRetiro, @PathVariable("idEstacionDevolucion")Integer idEstacionDevolucion){
         try {
             Double value = this.estacionService.calcularDistancia(idEstacionRetiro, idEstacionDevolucion);
             return ResponseEntity.ok(value);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }

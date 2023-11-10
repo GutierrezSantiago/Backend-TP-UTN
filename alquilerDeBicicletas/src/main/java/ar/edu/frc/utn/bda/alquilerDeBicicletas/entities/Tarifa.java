@@ -63,7 +63,8 @@ public class Tarifa {
            long diferenciaTiempoHoras = Math.round(diferenciaTiempoMinutos / 60);
            monto += diferenciaTiempoHoras * this.montoHora;
        }
-       return monto + distanciaRecorrida * this.montoKm;
+       double distanciaEnKm = distanciaRecorrida / 1000;
+       return monto + distanciaEnKm * this.montoKm;
     }
 
 
