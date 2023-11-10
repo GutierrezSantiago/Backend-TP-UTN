@@ -99,7 +99,7 @@ public class AlquileresController {
         try {
             RestTemplate template = new RestTemplate();
             Double distancia = template.getForObject(
-                    "http://localhost:8082/api/estacion/{idEstacionRetiro}&{idEstacionDevolucion}", Double.class, idEstacionRetiro, idEstacionDevolucion
+                    "http://localhost:8082/api/estacion/distancia/{idEstacionRetiro}&{idEstacionDevolucion}", Double.class, idEstacionRetiro, idEstacionDevolucion
             );
             System.out.println(template);
             System.out.println(distancia);
