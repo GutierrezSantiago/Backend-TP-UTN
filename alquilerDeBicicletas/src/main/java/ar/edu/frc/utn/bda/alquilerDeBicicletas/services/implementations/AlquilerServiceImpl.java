@@ -5,7 +5,11 @@ import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.Tarifa;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.repositories.AlquilerRepository;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.interfaces.AlquilerService;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.interfaces.TarifaService;
+import lombok.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +30,9 @@ public class AlquilerServiceImpl implements AlquilerService {
         }
         Tarifa tarifa = this.tarifaService.getTarifaActual(entity.getFechaHoraRetiro());
         entity.setTarifa(tarifa);
+        if (!this.existeEstacion(entity.getEstacionRetiroId())){
+            throw new IllegalArgumentException("No existe la estación de retiro");
+        }
         return this.alquilerRepository.save(entity);
     }
 
@@ -59,10 +66,43 @@ public class AlquilerServiceImpl implements AlquilerService {
     public Alquiler finalizar(String id, Integer estacionId) {
         Alquiler alquiler = this.alquilerRepository.findActivoByIdCliente(id);
         if(alquiler == null) throw new IllegalArgumentException("No se encontro el alquiler activo");
+        if (!this.existeEstacion(alquiler.getEstacionDevolucionId())){
+            throw new IllegalArgumentException("No existe la estación de devolucion");
+        }
         if(alquiler.getEstacionRetiroId() == estacionId) throw new IllegalArgumentException("La estacion de devolucion no puede ser la misma que la de retiro");
-        //double distancia = alquiler.getEstacionRetiro().getDistancia(alquiler.getEstacionDevolucion());
-        double distancia = 40;
+        double distancia = this.calcularDistancia(alquiler.getEstacionRetiroId(), estacionId);
         alquiler.finalizar(estacionId, distancia);
         return this.alquilerRepository.save(alquiler);
+    }
+
+    public boolean existeEstacion(Integer idEstacion) {
+        try {
+            RestTemplate template = new RestTemplate();
+            ResponseEntity<Object> res = template.getForEntity(
+                    "http://localhost:8082/api/estacion/{id}", Object.class, idEstacion
+            );
+
+            // Se comprueba si el código de repuesta es de la familia 200
+            return res.getStatusCode().is2xxSuccessful();
+
+        } catch (HttpServerErrorException ex) {
+            // Handle HTTP 5xx errors
+            System.out.println("HTTP Server Error: " + ex.getMessage());
+            throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion", ex);
+            //throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion");
+        }
+    }
+
+    public Double calcularDistancia(Integer idEstacionRetiro, Integer idEstacionDevolucion){
+        try {
+            RestTemplate template = new RestTemplate();
+            Double distancia = template.getForObject(
+                    "http://localhost:8082/api/estacion/{idEstacionRetiro}&{idEstacionDevolucion}", Double.class, idEstacionRetiro, idEstacionDevolucion
+            );
+            return distancia;
+
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion");
+        }
     }
 }

@@ -58,9 +58,10 @@ public class AlquileresController {
             Alquiler value = this.alquilerService.finalizar(id, estacionId);
             return ResponseEntity.ok(value);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("HTTP: " + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }

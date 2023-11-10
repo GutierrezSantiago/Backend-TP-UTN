@@ -58,4 +58,29 @@ public class EstacionController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Estacion> getById(Integer estacionId){
+        try {
+            Estacion estacion = this.estacionService.findById(estacionId);
+            return ResponseEntity.ok(estacion);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/{idEstacionRetiro}&{idEstacionDevolucion}")
+    public ResponseEntity<Double> calcularDistanciaEntreEstaciones(Integer idEstacionRetiro, Integer idEstacionDevolucion){
+        try {
+            Double value = this.estacionService.calcularDistancia(idEstacionRetiro, idEstacionDevolucion);
+            return ResponseEntity.ok(value);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 }
