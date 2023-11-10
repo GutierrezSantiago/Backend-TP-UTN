@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface AlquilerService extends Service<Alquiler, Integer>{
     public List<Alquiler> findAllEnPerido(LocalDateTime desde, LocalDateTime hasta);
-    public Alquiler finalizar(String id, Integer estacionId);
+    public Alquiler finalizar(Alquiler alquiler, Integer estacionId, Double distancia);
+    public Alquiler findActivoByIdCliente(String idCliente);
 }

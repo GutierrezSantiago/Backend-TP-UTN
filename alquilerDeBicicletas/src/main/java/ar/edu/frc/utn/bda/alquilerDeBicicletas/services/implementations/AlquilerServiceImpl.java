@@ -24,15 +24,8 @@ public class AlquilerServiceImpl implements AlquilerService {
     }
     @Override
     public Alquiler add(Alquiler entity) {
-        Alquiler existe = this.alquilerRepository.findActivoByIdCliente(entity.getIdCliente());
-        if(existe != null){
-            throw new IllegalArgumentException("Ya existe un alquiler activo para el cliente");
-        }
         Tarifa tarifa = this.tarifaService.getTarifaActual(entity.getFechaHoraRetiro());
         entity.setTarifa(tarifa);
-        if (!this.existeEstacion(entity.getEstacionRetiroId())){
-            throw new IllegalArgumentException("No existe la estación de retiro");
-        }
         return this.alquilerRepository.save(entity);
     }
 
@@ -63,46 +56,14 @@ public class AlquilerServiceImpl implements AlquilerService {
 
     // TODO: CONECTAR SERVICIOS DE ESTACIONES
     @Override
-    public Alquiler finalizar(String id, Integer estacionId) {
-        Alquiler alquiler = this.alquilerRepository.findActivoByIdCliente(id);
-        if(alquiler == null) throw new IllegalArgumentException("No se encontro el alquiler activo");
-        if (!this.existeEstacion(alquiler.getEstacionDevolucionId())){
-            throw new IllegalArgumentException("No existe la estación de devolucion");
-        }
-        if(alquiler.getEstacionRetiroId() == estacionId) throw new IllegalArgumentException("La estacion de devolucion no puede ser la misma que la de retiro");
-        double distancia = this.calcularDistancia(alquiler.getEstacionRetiroId(), estacionId);
+    public Alquiler finalizar(Alquiler alquiler, Integer estacionId, Double distancia) {
         alquiler.finalizar(estacionId, distancia);
         return this.alquilerRepository.save(alquiler);
     }
 
-    public boolean existeEstacion(Integer idEstacion) {
-        try {
-            RestTemplate template = new RestTemplate();
-            ResponseEntity<Object> res = template.getForEntity(
-                    "http://localhost:8082/api/estacion/{id}", Object.class, idEstacion
-            );
-
-            // Se comprueba si el código de repuesta es de la familia 200
-            return res.getStatusCode().is2xxSuccessful();
-
-        } catch (HttpServerErrorException ex) {
-            // Handle HTTP 5xx errors
-            System.out.println("HTTP Server Error: " + ex.getMessage());
-            throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion", ex);
-            //throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion");
-        }
-    }
-
-    public Double calcularDistancia(Integer idEstacionRetiro, Integer idEstacionDevolucion){
-        try {
-            RestTemplate template = new RestTemplate();
-            Double distancia = template.getForObject(
-                    "http://localhost:8082/api/estacion/{idEstacionRetiro}&{idEstacionDevolucion}", Double.class, idEstacionRetiro, idEstacionDevolucion
-            );
-            return distancia;
-
-        } catch (Exception ex) {
-            throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion");
-        }
+    @Override
+    public Alquiler findActivoByIdCliente(String idCliente) {
+        Alquiler alquiler =this.alquilerRepository.findActivoByIdCliente(idCliente);
+        return alquiler;
     }
 }
