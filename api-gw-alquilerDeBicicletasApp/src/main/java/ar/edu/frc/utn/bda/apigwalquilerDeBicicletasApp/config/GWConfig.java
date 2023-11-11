@@ -5,9 +5,13 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtGrantedAuthoritiesConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import java.util.ArrayList;
@@ -35,16 +39,25 @@ public class GWConfig {
     @Bean
     public SecurityWebFilterChain filterChain(ServerHttpSecurity http) throws Exception {
         http.authorizeExchange(exchanges -> exchanges
-                        /*
-                        .pathMatchers("/api/personas/**")
-                        .hasRole("KEMPES_ADMIN")
 
-                        .pathMatchers("/api/entradas/**")
-                        .hasRole("KEMPES_ORGANIZADOR")
-                        */
-                        // Swagger resources
-                        .pathMatchers("**")
-                        .permitAll()
+                        // ESTACION
+                        .pathMatchers(HttpMethod.GET,"/api/estacion/**")
+                        .hasAnyRole("CLIENTE", "ADMINISTRADORE")
+
+                        .pathMatchers(HttpMethod.POST,"/api/estacion/**")
+                        .hasRole("ADMINISTRADOR")
+
+
+                        // ALQUILERES
+                        .pathMatchers(HttpMethod.POST,"/api/alquiler/**")
+                        .hasRole("CLIENTE")
+
+                        .pathMatchers(HttpMethod.PUT,"/api/alquiler/**")
+                        .hasRole("CLIENTE")
+
+                        .pathMatchers(HttpMethod.GET,"/api/alquiler/**")
+                        .hasRole("ADMINISTRADOR")
+
                         // Cualquier otra petición...
                         .anyExchange()
                         .authenticated()
@@ -53,7 +66,7 @@ public class GWConfig {
                 .csrf(csrf -> csrf.disable());
         return http.build();
     }
-    /*
+
     // AUTH CONVERTER
     @Bean
     public ReactiveJwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -74,6 +87,6 @@ public class GWConfig {
 
         return jwtAuthenticationConverter;
     }
-    */
+
 
 }

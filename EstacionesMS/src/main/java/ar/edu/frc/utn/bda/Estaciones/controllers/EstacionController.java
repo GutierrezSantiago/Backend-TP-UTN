@@ -45,7 +45,7 @@ public class EstacionController {
         }
 
     }
-    @GetMapping("/{latitud}?{longitud}")
+    @GetMapping("/ubicacion/{latitud}&{longitud}")
     public ResponseEntity<Estacion> getEstacionByLatitudAndLongitud(@PathVariable("latitud")Double latitud, @PathVariable("longitud")Double longitud){
         try {
             Estacion value = this.estacionService.findByClosestTo(latitud, longitud);
