@@ -7,6 +7,7 @@ import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.Tarifa;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.repositories.AlquilerRepository;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.repositories.TarifaRepository;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.implementations.AlquilerServiceImpl;
+import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.implementations.EstacionServiceImpl;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.implementations.MonedaServiceImpl;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.implementations.TarifaServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -44,7 +45,8 @@ public class AlquilerControllerTest {
         TarifaServiceImpl tarifaService = new TarifaServiceImpl(tarifaRepository);
         AlquilerServiceImpl alquilerService = new AlquilerServiceImpl(alquilerRepository, tarifaService);
         MonedaServiceImpl monedaService = new MonedaServiceImpl();
-        alquilerController = new AlquileresController(alquilerService, monedaService);
+        EstacionServiceImpl estacionService = new EstacionServiceImpl();
+        alquilerController = new AlquileresController(alquilerService, monedaService, estacionService);
     }
 
     @Test
