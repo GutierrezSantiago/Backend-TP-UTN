@@ -1,7 +1,9 @@
 package ar.edu.frc.utn.bda.alquilerDeBicicletas.controllers;
 
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.Alquiler;
+import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.response.AlquilerResponse;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.interfaces.AlquilerService;
+import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.interfaces.MonedaService;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.support.LocalDateTimeConverter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,11 @@ import java.util.List;
 @RequestMapping("/api/alquileres")
 public class AlquileresController {
     private AlquilerService alquilerService;
+    private MonedaService monedaService;
 
-    public AlquileresController(AlquilerService alquilerService){
+    public AlquileresController(AlquilerService alquilerService, MonedaService monedaService){
         this.alquilerService = alquilerService;
+        this.monedaService = monedaService;
     }
     @GetMapping
     public ResponseEntity<List<Alquiler>> getAlquileresPeriodo(@RequestParam String desde, @RequestParam String hasta){
@@ -37,7 +41,6 @@ public class AlquileresController {
 
     }
 
-    // TODO: DEBERIA CHEQUEAR QUE EXISTA LA ESTACION y chequear lo del idCliente
     @PostMapping("{id}")
     public ResponseEntity<Alquiler> add(@PathVariable("id") String idCliente, @RequestBody Integer estacionRetiroId){
         try {
@@ -57,16 +60,27 @@ public class AlquileresController {
     }
 
 
-    @PutMapping("{id}")
-    public ResponseEntity<Alquiler> finalizar(@PathVariable("id") String id, @RequestParam Integer estacionId){
+    @PutMapping( "{id}")
+    public ResponseEntity<AlquilerResponse> finalizar(@PathVariable("id") String idCliente, @RequestParam Integer estacionId,
+                                              @RequestParam String moneda){
         try {
-            Alquiler alquiler = this.alquilerService.findActivoByIdCliente(id);
+            Alquiler alquiler = this.alquilerService.findActivoByIdCliente(idCliente);
+            if(alquiler == null) return ResponseEntity.badRequest().build();
             if (!this.existeEstacion(estacionId)||alquiler.getEstacionRetiroId() == estacionId){
                 return ResponseEntity.badRequest().build();
             }
             double distancia = this.calcularDistancia(alquiler.getEstacionRetiroId(), estacionId);
             Alquiler value = this.alquilerService.finalizar(alquiler, estacionId, distancia);
-            return ResponseEntity.ok(value);
+
+            if(moneda.isEmpty() || moneda.equals("ARS")){
+                moneda = "ARS";
+                AlquilerResponse response = AlquilerResponse.fromAlquiler(value, value.getMonto(), moneda);
+                System.out.println(response);
+                return ResponseEntity.ok(response);
+            }
+            Double montoConvertido = this.monedaService.convertirMoneda(moneda, value.getMonto());
+            AlquilerResponse response = AlquilerResponse.fromAlquiler(value, montoConvertido, moneda);
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

@@ -4,10 +4,14 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Converter(autoApply = true)
 public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime, Timestamp> {
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public Timestamp convertToDatabaseColumn(LocalDateTime localDateTime) {
@@ -21,5 +25,8 @@ public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime,
         return timestamp != null
                 ? timestamp.toLocalDateTime()
                 : null;
+    }
+    public String convertToJsonAttribute(LocalDateTime dateTime) {
+        return (dateTime == null ? null : dateTime.format(formatter));
     }
 }
