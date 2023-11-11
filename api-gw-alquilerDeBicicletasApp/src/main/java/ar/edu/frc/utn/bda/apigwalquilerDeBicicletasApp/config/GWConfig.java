@@ -8,24 +8,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtGrantedAuthoritiesConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebFluxSecurity
 public class GWConfig {
+    private final String[] swaggerUIPaths = {"/v2/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**", "/favicon.ico", "/swagger-ui/index.html"};
     // ROUTING
     @Bean
     public RouteLocator configurarRutas(RouteLocatorBuilder builder,
-                                        @Value("${apunte-api-gw-kempes.url-microservicio-personas}") String uriPersonas,
-                                        @Value("${apunte-api-gw-kempes.url-microservicio-entradas}") String uriEntradas) {
+                                        @Value("${api-gw.url-microservicio-alquileres}") String uriAlquileres,
+                                        @Value("${api-gw.url-microservicio-estaciones}") String uriEstaciones) {
         return builder.routes()
-                // Ruteo al Microservicio de Personas
-                .route(p -> p.path("/api/personas/**").uri(uriPersonas))
-                // Ruteo al Microservicio de Entradas
-                .route(p -> p.path("/api/entradas/**").uri(uriEntradas))
+                // Ruteo al MS Alquileres
+                .route(p -> p.path("/api/alquiler/**").uri(uriAlquileres))
+                // Ruteo al MS Estaciones
+                .route(p -> p.path("/api/estacion/**").uri(uriEstaciones))
                 .build();
 
     }
@@ -34,14 +35,16 @@ public class GWConfig {
     @Bean
     public SecurityWebFilterChain filterChain(ServerHttpSecurity http) throws Exception {
         http.authorizeExchange(exchanges -> exchanges
-
-                        // Esta ruta puede ser accedida por cualquiera, sin autorización
+                        /*
                         .pathMatchers("/api/personas/**")
                         .hasRole("KEMPES_ADMIN")
 
                         .pathMatchers("/api/entradas/**")
                         .hasRole("KEMPES_ORGANIZADOR")
-
+                        */
+                        // Swagger resources
+                        .pathMatchers("**")
+                        .permitAll()
                         // Cualquier otra petición...
                         .anyExchange()
                         .authenticated()
@@ -50,7 +53,7 @@ public class GWConfig {
                 .csrf(csrf -> csrf.disable());
         return http.build();
     }
-
+    /*
     // AUTH CONVERTER
     @Bean
     public ReactiveJwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -71,4 +74,6 @@ public class GWConfig {
 
         return jwtAuthenticationConverter;
     }
+    */
+
 }
