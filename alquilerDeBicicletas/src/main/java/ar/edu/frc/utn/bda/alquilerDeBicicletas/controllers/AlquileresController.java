@@ -1,7 +1,7 @@
 package ar.edu.frc.utn.bda.alquilerDeBicicletas.controllers;
 
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.Alquiler;
-import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.response.AlquilerResponse;
+import ar.edu.frc.utn.bda.alquilerDeBicicletas.entities.response.AlquilerFinResponse;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.interfaces.AlquilerService;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.services.interfaces.MonedaService;
 import ar.edu.frc.utn.bda.alquilerDeBicicletas.support.LocalDateTimeConverter;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/alquileres")
+@RequestMapping("/api/alquiler")
 public class AlquileresController {
     private AlquilerService alquilerService;
     private MonedaService monedaService;
@@ -61,8 +61,8 @@ public class AlquileresController {
 
 
     @PutMapping( "{id}")
-    public ResponseEntity<AlquilerResponse> finalizar(@PathVariable("id") String idCliente, @RequestParam Integer estacionId,
-                                              @RequestParam String moneda){
+    public ResponseEntity<AlquilerFinResponse> finalizar(@PathVariable("id") String idCliente, @RequestParam Integer estacionId,
+                                                         @RequestParam(required = false, defaultValue = "ARS") String moneda){
         try {
             Alquiler alquiler = this.alquilerService.findActivoByIdCliente(idCliente);
             if(alquiler == null) return ResponseEntity.badRequest().build();
@@ -71,15 +71,8 @@ public class AlquileresController {
             }
             double distancia = this.calcularDistancia(alquiler.getEstacionRetiroId(), estacionId);
             Alquiler value = this.alquilerService.finalizar(alquiler, estacionId, distancia);
-
-            if(moneda.isEmpty() || moneda.equals("ARS")){
-                moneda = "ARS";
-                AlquilerResponse response = AlquilerResponse.fromAlquiler(value, value.getMonto(), moneda);
-                System.out.println(response);
-                return ResponseEntity.ok(response);
-            }
             Double montoConvertido = this.monedaService.convertirMoneda(moneda, value.getMonto());
-            AlquilerResponse response = AlquilerResponse.fromAlquiler(value, montoConvertido, moneda);
+            AlquilerFinResponse response = AlquilerFinResponse.fromAlquiler(value, montoConvertido, moneda);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

@@ -10,7 +10,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @Data
-public class AlquilerResponse {
+public class AlquilerFinResponse {
     private String idCliente;
     private Integer estacionRetiroId;
     private Integer estacionDevolucionId;
@@ -21,12 +21,12 @@ public class AlquilerResponse {
 
 
 
-    public static AlquilerResponse fromAlquiler(Alquiler alquiler, Double montoConvertido, String moneda){
+    public static AlquilerFinResponse fromAlquiler(Alquiler alquiler, Double montoConvertido, String moneda){
         LocalDateTimeConverter converter = new LocalDateTimeConverter();
         String rDate = converter.convertToJsonAttribute(alquiler.getFechaHoraRetiro());
         String dDate = converter.convertToJsonAttribute(alquiler.getFechaHoraDevolucion());
 
-        return AlquilerResponse.builder()
+        return AlquilerFinResponse.builder()
                 .idCliente(alquiler.getIdCliente())
                 .estacionRetiroId(alquiler.getEstacionRetiroId())
                 .estacionDevolucionId(alquiler.getEstacionDevolucionId())

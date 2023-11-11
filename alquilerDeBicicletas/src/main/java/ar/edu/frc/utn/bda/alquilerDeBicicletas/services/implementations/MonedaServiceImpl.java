@@ -19,6 +19,7 @@ public class MonedaServiceImpl implements MonedaService {
         RestTemplate template = new RestTemplate();
 
         try {
+            if(monedaDestino.equals("ARS")) return importe;
             ResponseEntity<MonedaResponse> response = template.postForEntity(URL_CONVERTIR, new MonedaRequest(monedaDestino, importe), MonedaResponse.class);
             return response.getBody().getImporte();
         } catch (HttpServerErrorException e) {
