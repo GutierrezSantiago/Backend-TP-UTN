@@ -1,5 +1,6 @@
-package ar.edu.frc.utn.bda.Estaciones.entities;
+package ar.edu.frc.utn.bda.Estaciones.entities.response;
 
+import ar.edu.frc.utn.bda.Estaciones.entities.Estacion;
 import lombok.Builder;
 import lombok.Data;
 

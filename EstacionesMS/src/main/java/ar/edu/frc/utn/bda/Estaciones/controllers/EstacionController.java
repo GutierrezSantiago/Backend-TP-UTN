@@ -2,7 +2,7 @@ package ar.edu.frc.utn.bda.Estaciones.controllers;
 
 
 import ar.edu.frc.utn.bda.Estaciones.entities.Estacion;
-import ar.edu.frc.utn.bda.Estaciones.entities.EstacionResponse;
+import ar.edu.frc.utn.bda.Estaciones.entities.response.EstacionResponse;
 import ar.edu.frc.utn.bda.Estaciones.entities.requests.EstacionCreateRequest;
 import ar.edu.frc.utn.bda.Estaciones.services.interfaces.EstacionService;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +46,11 @@ public class EstacionController {
 
     }
     @GetMapping("/ubicacion/{latitud}&{longitud}")
-    public ResponseEntity<Estacion> getEstacionByLatitudAndLongitud(@PathVariable("latitud")Double latitud, @PathVariable("longitud")Double longitud){
+    public ResponseEntity<EstacionResponse> getEstacionByLatitudAndLongitud(@PathVariable("latitud")Double latitud, @PathVariable("longitud")Double longitud){
         try {
             Estacion value = this.estacionService.findByClosestTo(latitud, longitud);
-            return ResponseEntity.ok(value);
+            EstacionResponse response = EstacionResponse.fromEstacion(value);
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
