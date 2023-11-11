@@ -2,10 +2,9 @@ package ar.edu.frc.utn.bda.Estaciones.controllers;
 
 
 import ar.edu.frc.utn.bda.Estaciones.entities.Estacion;
+import ar.edu.frc.utn.bda.Estaciones.entities.EstacionResponse;
 import ar.edu.frc.utn.bda.Estaciones.entities.requests.EstacionCreateRequest;
 import ar.edu.frc.utn.bda.Estaciones.services.interfaces.EstacionService;
-import lombok.val;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +19,11 @@ public class EstacionController {
         this.estacionService = estacionService;
     }
     @GetMapping
-    public ResponseEntity<List<Estacion>> getAll(){
+    public ResponseEntity<List<EstacionResponse>> getAll(){
         try {
             List<Estacion> values = this.estacionService.findAll();
-            return ResponseEntity.ok(values);
+            List<EstacionResponse> response = values.stream().map(EstacionResponse::fromEstacion).toList();
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
