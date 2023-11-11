@@ -45,7 +45,8 @@ public class AlquilerControllerTest {
         TarifaServiceImpl tarifaService = new TarifaServiceImpl(tarifaRepository);
         AlquilerServiceImpl alquilerService = new AlquilerServiceImpl(alquilerRepository, tarifaService);
         MonedaServiceImpl monedaService = new MonedaServiceImpl();
-        alquilerController = new AlquileresController(alquilerService, monedaService);
+        EstacionServiceImpl estacionService = new EstacionServiceImpl();
+        alquilerController = new AlquileresController(alquilerService, monedaService, estacionService);
     }
 
     @Test
