@@ -23,8 +23,9 @@ public class MonedaServiceImpl implements MonedaService {
             ResponseEntity<MonedaResponse> response = template.postForEntity(URL_CONVERTIR, new MonedaRequest(monedaDestino, importe), MonedaResponse.class);
             return response.getBody().getImporte();
         } catch (HttpServerErrorException e) {
-            System.out.println(e.getMessage());
-            return 0;
+            return -1;
+        } catch (Exception e){
+            return -1;
         }
 
     }

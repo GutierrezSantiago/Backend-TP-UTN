@@ -53,8 +53,10 @@ public class AlquileresController {
             Alquiler value = this.alquilerService.add(aGuardar);
             return ResponseEntity.ok(AlquilerResponse.fromAlquiler(value));
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
 
@@ -72,7 +74,12 @@ public class AlquileresController {
             double distancia = this.estacionService.calcularDistancia(alquiler.getEstacionRetiroId(), estacionId);
             Alquiler value = this.alquilerService.finalizar(alquiler, estacionId, distancia);
             Double montoConvertido = this.monedaService.convertirMoneda(moneda, value.getMonto());
+            if (montoConvertido==-1) {
+                moneda = "ARS";
+                montoConvertido = value.getMonto();
+            }
             AlquilerFinResponse response = AlquilerFinResponse.fromAlquiler(value, montoConvertido, moneda);
+
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

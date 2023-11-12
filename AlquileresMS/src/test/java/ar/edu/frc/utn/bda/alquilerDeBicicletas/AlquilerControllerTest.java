@@ -80,7 +80,15 @@ public class AlquilerControllerTest {
     }
 
     @Test
-    public void testAddClienteExiste(){
+    public void testAddAlquilerExiste(){
+        Mockito.when(alquilerRepository.findActivoByIdCliente(any(String.class))).thenReturn(ALQUILER);
+        Assertions.assertEquals(
+                HttpStatus.BAD_REQUEST,
+                alquilerController.add("1", 1).getStatusCode()
+        );
+    }
+    @Test
+    public void testAddEstacionNotFound(){
         Mockito.when(alquilerRepository.findActivoByIdCliente(any(String.class))).thenReturn(ALQUILER);
         Assertions.assertEquals(
                 HttpStatus.BAD_REQUEST,
@@ -88,6 +96,8 @@ public class AlquilerControllerTest {
         );
     }
 /*
+
+
     @Test
     public void testFinalizar() {
         Mockito.when(alquilerRepository.findActivoByIdCliente(any(String.class))).thenReturn(ALQUILER);
@@ -117,5 +127,29 @@ public class AlquilerControllerTest {
         );
 
 
-    }*/
+    }
+
+    @Test
+    public void testFinalizarEstacionNotFound(){
+        Mockito.when(alquilerRepository.findActivoByIdCliente(any(String.class))).thenReturn(ALQUILER);
+        Assertions.assertEquals(
+                HttpStatus.BAD_REQUEST,
+                alquilerController.finalizar("1", 1).getStatusCode()
+        );
+
+
+    }
+
+    @Test
+    public void testFinalizarMonedaNoExiste(){
+        Mockito.when(alquilerRepository.findActivoByIdCliente(any(String.class))).thenReturn(ALQUILER);
+        Assertions.assertEquals(
+                HttpStatus.BAD_REQUEST,
+                alquilerController.add("1", 1).getStatusCode()
+        );
+    }
+
+    */
+
+
 }

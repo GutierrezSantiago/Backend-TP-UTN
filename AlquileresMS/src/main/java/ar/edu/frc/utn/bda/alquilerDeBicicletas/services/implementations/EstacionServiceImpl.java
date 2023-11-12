@@ -13,7 +13,6 @@ public class EstacionServiceImpl implements EstacionService {
     public boolean existeEstacion(Integer idEstacion) {
         try {
             RestTemplate template = new RestTemplate();
-            System.out.println("todo pelota");
             ResponseEntity<Object> res = template.getForEntity(
                     "http://localhost:8082/api/estacion/{id}", Object.class, idEstacion
             );
