@@ -24,7 +24,6 @@ public class AlquileresController {
 
     public AlquileresController(AlquilerService alquilerService, MonedaService monedaService, EstacionService estacionService){
         this.alquilerService = alquilerService;
-        
         this.monedaService = monedaService;
         this.estacionService = estacionService;
     }
@@ -53,10 +52,8 @@ public class AlquileresController {
             Alquiler value = this.alquilerService.add(aGuardar);
             return ResponseEntity.ok(AlquilerResponse.fromAlquiler(value));
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
 

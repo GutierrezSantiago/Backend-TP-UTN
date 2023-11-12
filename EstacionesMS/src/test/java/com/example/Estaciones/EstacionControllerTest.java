@@ -102,7 +102,7 @@ public class EstacionControllerTest {
         Mockito.when(estacionRepository.findById(2)).thenReturn(Optional.empty());
         Mockito.when(estacionRepository.findById(1)).thenReturn(Optional.of(ESTACION));
         Assertions.assertEquals(
-                HttpStatus.BAD_REQUEST+,
+                HttpStatus.BAD_REQUEST,
                 estacionController.calcularDistanciaEntreEstaciones(1, 2).getStatusCode()
         );
     }
