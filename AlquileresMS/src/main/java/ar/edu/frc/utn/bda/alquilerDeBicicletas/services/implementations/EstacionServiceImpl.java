@@ -13,18 +13,18 @@ public class EstacionServiceImpl implements EstacionService {
     public boolean existeEstacion(Integer idEstacion) {
         try {
             RestTemplate template = new RestTemplate();
+            System.out.println("todo pelota");
             ResponseEntity<Object> res = template.getForEntity(
                     "http://localhost:8082/api/estacion/{id}", Object.class, idEstacion
             );
-
-            // Se comprueba si el código de repuesta es de la familia 200
             return res.getStatusCode().is2xxSuccessful();
 
         } catch (HttpServerErrorException ex) {
             // Handle HTTP 5xx errors
-            System.out.println("HTTP Server Error: " + ex.getMessage());
-            throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion", ex);
+            return false;
             //throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion");
+        } catch (Exception ex) {
+            return false;
         }
     }
 
@@ -40,7 +40,6 @@ public class EstacionServiceImpl implements EstacionService {
             return distancia;
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new IllegalArgumentException("No se pudo realizar la petición al servicio Estacion");
         }
     }

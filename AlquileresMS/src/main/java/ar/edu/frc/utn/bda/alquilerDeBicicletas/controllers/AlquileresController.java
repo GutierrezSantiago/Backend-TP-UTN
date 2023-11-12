@@ -24,6 +24,7 @@ public class AlquileresController {
 
     public AlquileresController(AlquilerService alquilerService, MonedaService monedaService, EstacionService estacionService){
         this.alquilerService = alquilerService;
+        
         this.monedaService = monedaService;
         this.estacionService = estacionService;
     }
@@ -39,25 +40,21 @@ public class AlquileresController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
 
     }
 
     @PostMapping("{id}")
-    public ResponseEntity<AlquilerResponse> add(@PathVariable("id") String idCliente, @RequestBody Integer estacionRetiroId){
+    public ResponseEntity<AlquilerResponse> add(@PathVariable("id") String idCliente, @RequestParam Integer estacionRetiroId){
         try {
-            if (this.alquilerService.findActivoByIdCliente(idCliente)!=null||!this.estacionService.existeEstacion(estacionRetiroId)) return ResponseEntity.badRequest().build();
+            if (this.alquilerService.findActivoByIdCliente(idCliente)!=null||!this.estacionService.existeEstacion(estacionRetiroId)) throw new IllegalArgumentException("Datos no encontrados.");
             Alquiler aGuardar = new Alquiler(idCliente, estacionRetiroId);
             Alquiler value = this.alquilerService.add(aGuardar);
             return ResponseEntity.ok(AlquilerResponse.fromAlquiler(value));
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
 
@@ -78,11 +75,8 @@ public class AlquileresController {
             AlquilerFinResponse response = AlquilerFinResponse.fromAlquiler(value, montoConvertido, moneda);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("HTTP: " + e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }

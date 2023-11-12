@@ -42,7 +42,7 @@ public class GWConfig {
 
                         // ESTACION
                         .pathMatchers(HttpMethod.GET,"/api/estacion/**")
-                        .hasAnyRole("CLIENTE", "ADMINISTRADORE")
+                        .hasRole("CLIENTE")
 
                         .pathMatchers(HttpMethod.POST,"/api/estacion/**")
                         .hasRole("ADMINISTRADOR")

@@ -32,12 +32,13 @@ public class EstacionController {
 
     }
     @PostMapping
-    public ResponseEntity<Estacion> add(EstacionCreateRequest aRequest){
+    public ResponseEntity<EstacionResponse> add(EstacionCreateRequest aRequest){
         try {
             Estacion estacion = aRequest.toEstacion();
             estacion.setFechaHoraCreacion(LocalDateTime.now());
             Estacion value = this.estacionService.add(estacion);
-            return ResponseEntity.ok(value);
+            EstacionResponse response = EstacionResponse.fromEstacion(value);
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
@@ -59,15 +60,14 @@ public class EstacionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Estacion> getById(@PathVariable("id") Integer estacionId){
+    public ResponseEntity<EstacionResponse> getById(@PathVariable("id") Integer estacionId){
         try {
             Estacion estacion = this.estacionService.findById(estacionId);
-            return ResponseEntity.ok(estacion);
+            EstacionResponse response = EstacionResponse.fromEstacion(estacion);
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -78,10 +78,8 @@ public class EstacionController {
             Double value = this.estacionService.calcularDistancia(idEstacionRetiro, idEstacionDevolucion);
             return ResponseEntity.ok(value);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }

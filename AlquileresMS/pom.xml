@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ar.edu.frc.utn.bda</groupId>
-	<artifactId>alquilerDeBicicletas</artifactId>
+	<artifactId>AlquileresMS</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>alquilerDeBicicletas</name>
 	<description>Trabajo práctico correspondiente a la materia Backend de Aplicaciones: Sistema de Alquiler de Bicicletas</description>
