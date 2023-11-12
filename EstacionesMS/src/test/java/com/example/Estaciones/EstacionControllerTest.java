@@ -53,6 +53,22 @@ public class EstacionControllerTest {
     }
 
     @Test
+    void testGetById(){
+        Mockito.when(estacionRepository.findById(any(Integer.class))).thenReturn(Optional.of(ESTACION));
+        Assertions.assertEquals(
+                HttpStatus.OK,
+                estacionController.getById(1).getStatusCode()
+        );
+    }
+    @Test
+    void testGetByIdNotFound(){
+        Mockito.when(estacionRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
+        Assertions.assertEquals(
+                HttpStatus.NOT_FOUND,
+                estacionController.getById(1).getStatusCode()
+        );
+    }
+    @Test
     void testAdd(){
         Mockito.when(estacionRepository.save(any(Estacion.class))).thenReturn(ESTACION);
         Mockito.when(estacionRepository.saveAndFlush(any(Estacion.class))).thenReturn(ESTACION);
@@ -70,6 +86,27 @@ public class EstacionControllerTest {
                 estacionController.getEstacionByLatitudAndLongitud(1.0, 1.0).getStatusCode()
         );
     }
+
+    @Test
+    void testCalcularDistanciaEntreEstaciones(){
+        Mockito.when(estacionRepository.findById(1)).thenReturn(Optional.of(ESTACION));
+        Mockito.when(estacionRepository.findById(1)).thenReturn(Optional.of(ESTACION));
+        Assertions.assertEquals(
+                HttpStatus.OK,
+                estacionController.calcularDistanciaEntreEstaciones(1, 1).getStatusCode()
+        );
+    }
+
+    @Test
+    void testCalcularDistanciaEntreEstacionesEstacionNoExiste(){
+        Mockito.when(estacionRepository.findById(2)).thenReturn(Optional.empty());
+        Mockito.when(estacionRepository.findById(1)).thenReturn(Optional.of(ESTACION));
+        Assertions.assertEquals(
+                HttpStatus.BAD_REQUEST+,
+                estacionController.calcularDistanciaEntreEstaciones(1, 2).getStatusCode()
+        );
+    }
+
 
 
 
