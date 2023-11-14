@@ -32,7 +32,7 @@ public class EstacionController {
 
     }
     @PostMapping
-    public ResponseEntity<EstacionResponse> add(EstacionCreateRequest aRequest){
+    public ResponseEntity<EstacionResponse> add(@RequestBody EstacionCreateRequest aRequest){
         try {
             Estacion estacion = aRequest.toEstacion();
             estacion.setFechaHoraCreacion(LocalDateTime.now());
